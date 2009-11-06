@@ -7,7 +7,7 @@ namespace LemCrunch
 class Section
 {
 public:
-	Section( void ) : data(NULL) { /* nothing to do */ };
+	Section( void ) : data(NULL), size(0) { /* nothing to do */ };
 	~Section( void ) { free(data); };
 	
 	class Header
@@ -21,7 +21,7 @@ public:
 	
 	Header    header;
 	uint8_t * data;
-	size_t    len;
+	size_t    size;
 	
 	void compress( uint8_t * uncompressed_data, size_t uncompressed_data_len );
 	
@@ -37,9 +37,9 @@ private:
 	size_t    m_di;
 	uint8_t * m_ddata;
 	
-	void push_next_bits( size_t count, uint16_t data );
-	void encode_raw_chunk( size_t length );
+	void push_bits( size_t count, uint16_t data );
 	size_t find_reference( size_t & length ) const;
+	void encode_raw_data( size_t length );
 };
 
 }

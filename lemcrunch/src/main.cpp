@@ -4,7 +4,7 @@ using namespace std;
 
 int main( int argc, char * argv[] )
 {
-	if (argc < 3)
+	if (argc < 2)
 	{
 		cout << "Usage: " << argv[0] << " DATFILE FILE..." << endl;
 		cout << "Compress FILEs into DATFILE." << endl << endl;
@@ -29,7 +29,7 @@ int main( int argc, char * argv[] )
 		}
 		
 		fseek(f, 0, SEEK_END);
-		size_t size = ftell(f);
+		long size = ftell(f);
 		fseek(f, 0, SEEK_SET);
 		
 		uint8_t *data = static_cast<uint8_t *>(malloc(size));
@@ -44,14 +44,14 @@ int main( int argc, char * argv[] )
 		
 		cout << "section " << (i - 2) << ": " << argv[i] << endl
 		     << "\tchecksum: 0x" << hex << setw(2) << setfill('0') << (int)section.header.checksum << dec << endl
-		     << "\tcompressed size: " << section.len << " B (" << (size > 0 ? section.len * 100 / size : 0) << "%)" << endl;
+		     << "\tcompressed size: " << section.size << " B (" << (size > 0 ? section.size * 100 / size : 0) << "%)" << endl;
 		
 		fwrite(&section.header.initial_bit_count,    sizeof(uint8_t),  1, datf);
 		fwrite(&section.header.checksum,             sizeof(uint8_t),  1, datf);
 		fwrite(&section.header.be_decompressed_size, sizeof(uint32_t), 1, datf);
 		fwrite(&section.header.be_compressed_size,   sizeof(uint32_t), 1, datf);
 		
-		fwrite(section.data, 1, section.len, datf);
+		fwrite(section.data, 1, section.size, datf);
 	}
 	
 	fclose(datf);
