@@ -34,10 +34,12 @@ public:
 		
 		std::vector< std::pair<std::streampos, Uint8 *> > frame;
 		
-		Animation() {};
-		Animation( const Animation & );
-		~Animation();
+		Animation( void ) { /* nothing to do */ }
+		Animation( const Animation &that ) { copy(that); }
+		~Animation( void ) { destroy(); }
 		
+		void copy( const Animation & );
+		void destroy( void );
 		Animation & operator=( const Animation & );
 	};
 	

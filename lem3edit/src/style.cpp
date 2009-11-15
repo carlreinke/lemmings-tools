@@ -24,9 +24,24 @@
 #include <iostream>
 using namespace std;
 
-Style::Object::Object( const Style::Object &that )
-: id(that.id), width(that.width), height(that.height), frl(that.frl)
+Style::Object & Style::Object::operator=( const Style::Object &that )
 {
+	if (this == &that)
+		return *this;
+	
+	destroy();
+	copy(that);
+	
+	return *this;
+}
+
+void Style::Object::copy( const Style::Object &that )
+{
+	id = that.id;
+	width = that.width;
+	height = that.height;
+	frl = that.frl;
+	
 	for (unsigned int i = 0; i < COUNTOF(unknown); ++i)
 		unknown[i] = that.unknown[i];
 	
@@ -38,20 +53,10 @@ Style::Object::Object( const Style::Object &that )
 	}
 }
 
-Style::Object::~Object()
+void Style::Object::destroy( void )
 {
 	for (vector<Uint16 *>::const_iterator f = frame.begin(); f != frame.end(); ++f)
 		delete[] *f;
-}
-
-Style::Object & Style::Object::operator=( const Style::Object &that )
-{
-	if (this == &that)
-		return *this;
-	
-	assert(false); // this is never actually called anyway
-	
-	return *this;
 }
 
 void Style::Block::blit( SDL_Surface *dest, signed int x, signed int y ) const
@@ -259,7 +264,8 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 			{
 				int b;
 				
-				switch (type) {
+				switch (type)
+				{
 				case 0:
 					Uint8 x, y;
 					frl_f.read((char *)&x, sizeof(x));
@@ -271,7 +277,7 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 					b = k;
 					break;
 				default:
-					assert(0);
+					assert(false);
 					break;
 				}
 				

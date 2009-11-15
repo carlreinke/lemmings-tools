@@ -21,7 +21,7 @@
 #include <cassert>
 using namespace std;
 
-Editor::Editor()
+Editor::Editor( void )
  : scroll_x(0), scroll_y(0), drag_snap_x(0), drag_snap_y(0)
 {
 	font.load("FONT");
@@ -62,7 +62,7 @@ bool Editor::select( signed int x, signed int y, bool modify_selection )
 	return redraw = true;
 }
 
-bool Editor::select_none()
+bool Editor::select_none( void )
 {
 	if (selection.empty())
 		return false;
@@ -72,7 +72,7 @@ bool Editor::select_none()
 	return redraw = true;
 }
 
-bool Editor::select_all()
+bool Editor::select_all( void )
 {
 	for (unsigned int type = 0; type < COUNTOF(level.object); ++type)
 	{
@@ -85,7 +85,7 @@ bool Editor::select_all()
 	return redraw = !selection.empty();
 }
 
-bool Editor::copy_selected()
+bool Editor::copy_selected( void )
 {
 	clipboard.clear();
 	
@@ -97,7 +97,7 @@ bool Editor::copy_selected()
 	return !clipboard.empty();
 }
 
-bool Editor::paste()
+bool Editor::paste( void )
 {
 	selection.clear(); // maybe delete selection instead?
 	
@@ -113,7 +113,7 @@ bool Editor::paste()
 	return redraw = !clipboard.empty();
 }
 
-bool Editor::delete_selected()
+bool Editor::delete_selected( void )
 {
 	if (selection.empty())
 		return false;
@@ -154,7 +154,7 @@ bool Editor::move_selected_z( signed int delta_z )
 	
 	for (Selection::const_iterator i = selection.begin(); i != selection.end(); ++i)
 	{
-		assert(false);
+		assert(false); // TODO
 	}
 	
 	return redraw = true;

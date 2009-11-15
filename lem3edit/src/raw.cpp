@@ -56,7 +56,7 @@ bool Raw::load( string name )
 
 bool Raw::load_raw( string raw_filename )
 {
-	free();
+	destroy();
 	
 	ifstream raw_f(raw_filename.c_str(), ios::binary);
 	
@@ -90,7 +90,7 @@ bool Raw::load_raw( string raw_filename )
 	return true;
 }
 
-void Raw::free()
+void Raw::destroy( void )
 {
 	for (vector<Uint8 *>::const_iterator f = frame.begin(); f != frame.end(); ++f)
 		delete[] *f;

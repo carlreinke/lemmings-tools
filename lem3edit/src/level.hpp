@@ -71,11 +71,11 @@ public:
 	bool load_objects( int type, const std::string &path, const std::string &name, unsigned int n);
 	bool load_objects( int type, const std::string &filename );
 	
-	bool validate(); // TODO remove objects with non-existant IDs, remove objects outside the level boundaries
+	bool validate( void ); // TODO remove objects with non-existant IDs, remove objects outside the level boundaries
 	
 	bool save( int n );
 	
-	Level() {}
+	Level( void ) { /* nothing to do */ }
 	
 private:
 	Level( const Level & );

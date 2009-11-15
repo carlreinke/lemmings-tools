@@ -36,10 +36,10 @@ public:
 	bool load( std::string name );
 	bool load_raw( std::string raw_filename );
 	
-	void free();
+	void destroy();
 	
 	Raw( unsigned int width, unsigned int height ) : width(width), height(height), frame(NULL) { assert(width % 4 == 0); }
-	~Raw() { free(); }
+	~Raw( void ) { destroy(); }
 	
 private:
 	Raw( const Raw & );

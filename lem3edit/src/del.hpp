@@ -34,10 +34,12 @@ public:
 		
 		void blit( SDL_Surface *surface, signed int x, signed int y, unsigned int width, unsigned int height ) const;
 		
-		Frame( unsigned int size ) : size(size), frame(new Uint8[size]) {}
-		Frame( const Frame & );
-		~Frame() { delete[] frame; }
+		Frame( unsigned int size ) : size(size), frame(new Uint8[size]) { /* nothing to do */ }
+		Frame( const Frame &that ) { copy(that); }
+		~Frame() { destroy(); }
 		
+		void copy( const Frame & );
+		void destroy( void );
 		Frame & operator=( const Frame & );
 	};
 	

@@ -24,9 +24,11 @@
 #include <iostream>
 using namespace std;
 
-Cmp::Animation::Animation( const Cmp::Animation &that )
- : width(that.width), height(that.height)
+void Cmp::Animation::copy( const Cmp::Animation &that )
 {
+	width = that.width;
+	height = that.height;
+	
 	for (vector< pair<streampos, Uint8 *> >::const_iterator i = that.frame.begin(); i != that.frame.end(); ++i)
 	{
 		Uint8 *temp = new Uint8[i->first];
@@ -35,7 +37,7 @@ Cmp::Animation::Animation( const Cmp::Animation &that )
 	}
 }
 
-Cmp::Animation::~Animation()
+void Cmp::Animation::destroy( void )
 {
 	for (vector< pair<streampos, Uint8 *> >::const_iterator i = frame.begin(); i != frame.end(); ++i)
 		delete[] i->second;
@@ -46,7 +48,8 @@ Cmp::Animation & Cmp::Animation::operator=( const Cmp::Animation &that )
 	if (this == &that)
 		return *this;
 	
-	assert(false); // this is never actually called anyway
+	destroy();
+	copy(that);
 	
 	return *this;
 }

@@ -23,11 +23,17 @@
 #include <iostream>
 using namespace std;
 
-Del::Frame::Frame( const Del::Frame &that )
-: size(that.size)
+void Del::Frame::copy( const Del::Frame &that )
 {
+	size = that.size;
+	
 	frame = new Uint8[size];
 	memcpy(frame, that.frame, sizeof(Uint8) * size);
+}
+
+void Del::Frame::destroy( void )
+{
+	delete[] frame;
 }
 
 Del::Frame & Del::Frame::operator=( const Del::Frame &that )
@@ -35,7 +41,8 @@ Del::Frame & Del::Frame::operator=( const Del::Frame &that )
 	if (this == &that)
 		return *this;
 	
-	assert(false); // this is never actually called anyway
+	destroy();
+	copy(that);
 	
 	return *this;
 }

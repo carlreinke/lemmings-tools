@@ -38,10 +38,12 @@ public:
 		
 		std::vector<Uint16 *> frame;
 		
-		Object() {}
-		Object( const Object & );
-		~Object();
+		Object( void ) { /* nothing to do */ }
+		Object( const Object &that ) { copy(that); }
+		~Object( void ) { destroy(); }
 		
+		void copy( const Object & );
+		void destroy( void );
 		Object & operator=( const Object & );
 	};
 	
@@ -77,7 +79,7 @@ public:
 	bool load_blocks( int type, const std::string &path, const std::string &name, unsigned int n );
 	bool load_blocks( int type, const std::string &blk_filename );
 	
-	Style() {}
+	Style( void ) { /* nothing to do */ }
 	
 private:
 	Style( const Style & );

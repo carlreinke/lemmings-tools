@@ -32,12 +32,12 @@ public:
 	Clipboard clipboard;
 	
 	bool select( signed int x, signed int y, bool modify );
-	bool select_none();
-	bool select_all();
+	bool select_none( void );
+	bool select_all( void );
 	
-	bool copy_selected();
-	bool paste();
-	bool delete_selected();
+	bool copy_selected( void );
+	bool paste( void );
+	bool delete_selected( void );
 	bool move_selected( signed int delta_x, signed int delta_y );
 	bool move_selected_z( signed int delta_z );
 	
@@ -45,8 +45,8 @@ public:
 	
 	bool load( int n );
 	
-	Editor();
-	~Editor() {}
+	Editor( void );
+	~Editor( void ) { /* nothing to do */ }
 	
 private:
 	Editor( const Editor & );
