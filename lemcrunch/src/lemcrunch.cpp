@@ -1,3 +1,22 @@
+/*
+ * lemcrunch
+ * Copyright (C) 2006, 2009 Carl Reinke
+ * Portions Copyright (C) 2004 ccexplore
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 #include "lemcrunch.hpp"
 
 using namespace std;
@@ -17,6 +36,11 @@ namespace LemCrunch
 {
 
 static bool debug = false;
+
+uint32_t Section::Header::compressed_size( void ) const
+{
+	return be_swap32(be_compressed_size) - 10;
+}
 
 void Section::compress( uint8_t * uncompressed_data, size_t uncompressed_data_len )
 {
@@ -38,10 +62,11 @@ void Section::compress( uint8_t * uncompressed_data, size_t uncompressed_data_le
 		
 		if ((ref = find_reference(length)) > 0)
 		{
-			debug && clog << raw << "-" << ref << "-" << length << (length > 4 ? 'l' : 's') << endl;
-			
-			encode_raw_data(raw);
-			raw = 0;
+			if (raw > 0)
+			{
+				encode_raw_data(raw);
+				raw = 0;
+			}
 			
 			if (length > 4)
 			{
@@ -65,6 +90,8 @@ void Section::compress( uint8_t * uncompressed_data, size_t uncompressed_data_le
 				push_bits(2, 1); // 01
 			}
 			
+			debug && clog << "ref-" << ref << "-" << length << endl;
+			
 			m_di += length;
 		}
 		else
@@ -73,8 +100,6 @@ void Section::compress( uint8_t * uncompressed_data, size_t uncompressed_data_le
 			
 			if (++raw == 264)
 			{
-				debug && clog << raw << endl;
-				
 				encode_raw_data(raw);
 				raw = 0;
 			}
@@ -170,14 +195,14 @@ void Section::encode_raw_data( size_t length )
 		push_bits(3, length - 1);
 		push_bits(2, 0);  // 00
 	}
+	
+	debug && clog << "raw-" << length << endl;
 }
 
-void Section::push_bits( size_t count, uint16_t data )
+void Section::push_bits( unsigned int bit_count, uint16_t data )
 {
-	for (; count > 0; --count)
+	for (; bit_count > 0; --bit_count)
 	{
-		debug &&  printf("%d", data & 1);
-		
 		if (++m_bit_count > 8)
 		{
 			m_checksum ^= m_cdata[m_ci];  // keep a running checksum
@@ -193,12 +218,141 @@ void Section::push_bits( size_t count, uint16_t data )
 			m_bit_count = 1;
 		}
 		
+		debug && clog << (data & 1);
+		
 		m_cdata[m_ci] <<= 1;
 		m_cdata[m_ci] |= data & 1;
 		data >>= 1;
 	}
 	
-	debug && printf(" ");
+	debug && clog << " ";
+}
+
+void Section::decompress( uint8_t * compressed_data )
+{
+	m_bit_count = header.initial_bit_count;
+	m_checksum = header.checksum;
+	
+	m_csize = m_ci = header.compressed_size();
+	m_dsize = m_di = be_swap32(header.be_decompressed_size);
+	m_cdata = compressed_data;
+	m_ddata = static_cast<uint8_t *>(malloc(m_dsize));
+	
+	size = m_dsize;
+	data = m_ddata;
+	
+	if (m_dsize == 0)
+		return;
+	
+	if (m_ci == 0)
+		throw DECOMPRESSION_ERROR;
+	
+	--m_ci;
+	m_bits = m_cdata[m_ci];
+	
+	// handle last partial byte
+	m_checksum ^= m_cdata[m_ci];
+	
+	do
+	{
+		if (get_bits(1) == 0)
+		{
+			switch (get_bits(1))
+			{
+			case 0:  // 00
+				decode_raw_data(get_bits(3) + 1);
+				break;
+			case 1:  // 01
+				dereference_data(2, 8);
+				break;
+			}
+		}
+		else
+		{
+			switch (get_bits(2))
+			{
+			case 0:  // 100
+				dereference_data(3, 9);
+				break;
+			case 1:  // 101
+				dereference_data(4, 10);
+				break;
+			case 2:  // 110
+				dereference_data(get_bits(8) + 1, 12);
+				break;
+			case 3:  // 111
+				decode_raw_data(get_bits(8) + 9);
+				break;
+			}
+		}
+	}
+	while (m_di > 0);
+	
+	if (m_checksum != 0x00)
+		throw CHECKSUM_MISMATCH;
+}
+
+uint16_t Section::get_bits( unsigned int bit_count )
+{
+	uint16_t result = 0;
+	
+	for (; bit_count > 0; --bit_count)
+	{
+		if (m_bit_count-- == 0)
+		{
+			if (m_ci == 0)
+				throw DECOMPRESSION_ERROR;
+			
+			--m_ci;
+			m_bits = m_cdata[m_ci];
+			
+			m_checksum ^= m_bits;  // keep a running checksum
+			
+			m_bit_count = 7;
+		}
+		
+		debug && clog << (m_bits & 1);
+		
+		result <<= 1;
+		result |= (m_bits & 1);
+		m_bits >>= 1;
+	}
+	
+	debug && clog << " ";
+	
+	return result;
+}
+
+void Section::dereference_data( size_t length, unsigned int offset_bit_count )
+{
+	size_t offset = get_bits(offset_bit_count) + 1;
+	
+	if (m_di - 1 + offset >= m_dsize && m_di < length)
+		throw DECOMPRESSION_ERROR;
+	
+	debug && clog << "ref-" << offset << "-" << length << endl;
+	
+	for (; length > 0; --length)
+	{
+		--m_di;
+		m_ddata[m_di] = m_ddata[m_di + offset];
+	}
+}
+
+void Section::decode_raw_data( size_t length )
+{
+	if (m_di < length)
+		throw DECOMPRESSION_ERROR;
+	
+	const size_t debug_length = length;
+	
+	for (; length > 0; --length)
+	{
+		--m_di;
+		m_ddata[m_di] = get_bits(8);
+	}
+	
+	debug && clog << "raw-" << debug_length << endl;
 }
 
 }
