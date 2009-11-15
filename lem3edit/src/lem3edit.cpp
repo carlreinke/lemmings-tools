@@ -40,13 +40,13 @@ SDL_Surface *display_surface = NULL;
 bool video_init( int width, int height, bool fullscreen );
 
 Uint32 loop_timer( Uint32 interval, void *param );
-void die();
+void die( void );
 
 signed int snap( signed int &value, unsigned int snap );
 
 void box_dashed( SDL_Surface *surface, int x, int y, int width, int height, int dash );
 
-void version();
+void version( void );
 
 int main( int argc, char *argv[] )
 {
@@ -171,7 +171,7 @@ int main( int argc, char *argv[] )
 					signed int delta_x = (-left + right) * delta_multiplier;
 					
 					const unsigned int up = (mouse_y < mouse_scroll_trigger) ? 2 : 0 + key_state[SDLK_i] ? 1 : 0;
-					const unsigned int down = (mouse_y >= (signed)display_surface->h - mouse_scroll_trigger) ? 2 : 0 + key_state[SDLK_l] ? 1 : 0;
+					const unsigned int down = (mouse_y >= (signed)display_surface->h - mouse_scroll_trigger) ? 2 : 0 + key_state[SDLK_k] ? 1 : 0;
 					signed int delta_y = (-up + down) * delta_multiplier;
 					
 					editor.scroll(delta_x, delta_y, mouse_state & SDL_BUTTON(SDL_BUTTON_LEFT));
@@ -210,7 +210,8 @@ Uint32 loop_timer( Uint32 interval, void *param )
 	return interval;
 }
 
-void die() {
+void die( void )
+{
 	SDL_Event event;
 	event.type = SDL_QUIT;
 	SDL_PushEvent(&event);
@@ -238,6 +239,7 @@ bool video_init( int width, int height, bool fullscreen )
 	SDL_Color palette_buffer[256];
 	int was_init = display_surface != NULL;
 	
+	// preserve palette if display is being reinitialized
 	if (was_init)
 		memcpy(palette_buffer, display_surface->format->palette->colors, sizeof(palette_buffer));
 	
