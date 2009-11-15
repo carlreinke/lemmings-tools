@@ -50,8 +50,7 @@ bool Tribe::load_palette( string path, string name, unsigned int n )
 bool Tribe::load_palette( string pal_filename )
 {
 	ifstream pal_f(pal_filename.c_str(), ios::binary);
-	
-	if (pal_f.fail())
+	if (!pal_f)
 	{
 		cerr << "failed to open '" << pal_filename << "'" << endl;
 		return false;

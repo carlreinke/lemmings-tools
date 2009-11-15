@@ -59,8 +59,7 @@ bool Raw::load_raw( string raw_filename )
 	destroy();
 	
 	ifstream raw_f(raw_filename.c_str(), ios::binary);
-	
-	if (raw_f.fail())
+	if (!raw_f)
 	{
 		cerr << "failed to open '" << raw_filename << "'" << endl;
 		return false;
@@ -74,7 +73,7 @@ bool Raw::load_raw( string raw_filename )
 	{
 		raw_f.read((char *)temp, size);
 		
-		if (raw_f.eof())
+		if (!raw_f)
 			break;
 		
 		Uint8 *f = new Uint8[size];

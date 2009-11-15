@@ -136,16 +136,14 @@ bool Cmp::load( const string &ind_filename, const string &cmp_filename )
 	animation.clear();
 	
 	ifstream ind_f(ind_filename.c_str(), ios::binary);
-	
-	if (ind_f.fail())
+	if (!ind_f)
 	{
 		cerr << "failed to open '" << ind_filename << "'" << endl;
 		return false;
 	}
 	
 	ifstream cmp_f(cmp_filename.c_str(), ios::binary);
-	
-	if (cmp_f.fail())
+	if (!cmp_f)
 	{
 		cerr << " failed to open '" << cmp_filename << "'" << endl;
 		return false;
@@ -161,7 +159,7 @@ bool Cmp::load( const string &ind_filename, const string &cmp_filename )
 		ind_f.read((char *)&a.height, sizeof(a.height));
 		ind_f.read((char *)&frames,   sizeof(frames));
 		
-		if (ind_f.eof())
+		if (!ind_f)
 			break;
 		
 		for (; frames > 0; --frames)
@@ -173,7 +171,7 @@ bool Cmp::load( const string &ind_filename, const string &cmp_filename )
 				Uint8 cmp_temp;
 				cmp_f.read((char *)&cmp_temp, sizeof(cmp_temp));
 				
-				if (cmp_f.eof())
+				if (!cmp_f)
 				{
 					cerr << "unexpected end-of-file '" << cmp_filename << "'" << endl;
 					return false;
