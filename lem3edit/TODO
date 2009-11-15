@@ -1,0 +1,7 @@
+ * interface
+ * keys for changing object IDs
+     disable object-modifying keys while dragging
+ * Level::validate()
+     warn about objects outside level boundaries
+ * Level::save()
+
