@@ -1,0 +1,11 @@
+syntax: glob
+
+*~
+
+*/obj/*
+*/src/*.gch
+
+lem3edit/GRAPHICS/*
+lem3edit/LEVELS/*
+lem3edit/STYLES/*
+
