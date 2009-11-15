@@ -113,16 +113,14 @@ bool Del::load( const string &din_filename, const string &del_filename )
 	frame.clear();
 	
 	ifstream din_f(din_filename.c_str(), ios::binary);
-	
-	if (din_f.fail())
+	if (!din_f)
 	{
 		cerr << "failed to open '" << din_filename << "'" << endl;
 		return false;
 	}
 	
 	ifstream del_f(del_filename.c_str(), ios::binary);
-	
-	if (del_f.fail())
+	if (!del_f)
 	{
 		cerr << " failed to open '" << del_filename << "'" << endl;
 		return false;
@@ -134,14 +132,14 @@ bool Del::load( const string &din_filename, const string &del_filename )
 		
 		din_f.read((char *)&size, sizeof(size));
 		
-		if (din_f.eof())
+		if (!din_f)
 			break;
 		
 		Frame f(size);
 		
 		del_f.read((char *)f.frame, f.size);
 		
-		if (din_f.eof())
+		if (!din_f)
 			return false;
 		
 		frame.push_back(f);

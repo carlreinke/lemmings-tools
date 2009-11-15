@@ -121,8 +121,7 @@ bool Level::load_level( const std::string &path, const std::string &name, unsign
 bool Level::load_level( const string &filename )
 {
 	ifstream f(filename.c_str(), ios::binary);
-	
-	if (f.fail())
+	if (!f)
 	{
 		cerr << "failed to open '" << filename << "'" << endl;
 		return false;
@@ -165,8 +164,7 @@ bool Level::load_objects( int type, const string &filename )
 	object[type].clear();
 	
 	ifstream f(filename.c_str(), ios::binary);
-	
-	if (f.fail())
+	if (!f)
 	{
 		cerr << "failed to open '" << filename << "'" << endl;
 		return false;
@@ -180,7 +178,7 @@ bool Level::load_objects( int type, const string &filename )
 		f.read((char *)&o.x,  sizeof(o.x));
 		f.read((char *)&o.y,  sizeof(o.y));
 		
-		if (f.eof())
+		if (!f)
 			break;
 		
 		object[type].push_back(o);

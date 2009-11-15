@@ -164,8 +164,7 @@ bool Style::load_palette( string path, string name, unsigned int n )
 bool Style::load_palette( string pal_filename )
 {
 	ifstream pal_f(pal_filename.c_str(), ios::binary);
-	
-	if (pal_f.fail())
+	if (!pal_f)
 	{
 		cerr << " failed to open '" << pal_filename << "'" << endl;
 		return false;
@@ -203,16 +202,14 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 	object[type].clear();
 	
 	ifstream obj_f(obj_filename.c_str(), ios::binary);
-	
-	if (obj_f.fail())
+	if (!obj_f)
 	{
 		cerr << "failed to open '" << obj_filename << "'" << endl;
 		return false;
 	}
 	
 	ifstream frl_f(frl_filename.c_str(), ios::binary);
-	
-	if (frl_f.fail())
+	if (!frl_f)
 	{
 		cerr << "failed to open '" << frl_filename << "'" << endl;
 		return false;
@@ -234,7 +231,7 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 		obj_f.read((char *)&o.unknown[2], sizeof(o.unknown[2]));
 		obj_f.read((char *)&o.unknown[3], sizeof(o.unknown[3]));
 		
-		if (obj_f.eof())
+		if (!obj_f)
 			break;
 		
 		for (int j = 0; j < frames; ++j)
@@ -284,7 +281,7 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 				frl_f.read((char *)&frame[b], sizeof(*frame));
 			}
 			
-			if (frl_f.eof())
+			if (!frl_f)
 			{
 				delete[] frame;
 				
@@ -318,8 +315,7 @@ bool Style::load_blocks( int type, const string &blk_filename )
 	block[type].clear();
 	
 	ifstream blk_f(blk_filename.c_str(), ios::binary);
-	
-	if (blk_f.fail())
+	if (!blk_f)
 	{
 		cerr << "failed to open '" << blk_filename << "'" << endl;
 		return false;
@@ -331,7 +327,7 @@ bool Style::load_blocks( int type, const string &blk_filename )
 		
 		blk_f.read((char *)&temp, sizeof(temp));
 		
-		if (blk_f.eof())
+		if (!blk_f)
 			break;
 		
 		Block b(temp);
