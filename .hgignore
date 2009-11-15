@@ -3,8 +3,14 @@ syntax: glob
 *~
 
 */obj/*
+*/src/*.d
 */src/*.gch
 
+lemcrunch/lemcrunch
+
+lem2zip/lem2zip
+
+lem3edit/lem3edit
 lem3edit/GRAPHICS/*
 lem3edit/LEVELS/*
 lem3edit/STYLES/*
