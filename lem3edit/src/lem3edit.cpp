@@ -31,8 +31,8 @@
 #include <string>
 using namespace std;
 
-const char *prog_name = "lem2zip",
-           *prog_ver = "SVN",
+const char *prog_name = "lem3edit",
+           *prog_ver = "hg",
            *prog_date = "no date";
 
 SDL_Surface *display_surface = NULL;
