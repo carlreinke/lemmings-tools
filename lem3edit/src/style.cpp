@@ -135,23 +135,12 @@ bool Style::load( unsigned int n )
 	const string perm = "PERM", temp = "TEMP";
 	const string objec = "OBJEC";
 	
-	if (load_palette(path, data, n) == false)
-		return false;
-	
-	if (load_objects(PERM, path, perm, n) == false)
-		return false;
-	if (load_blocks(PERM, path, perm, n) == false)
-		return false;
-	
-	if (load_objects(TEMP, path, temp, n) == false)
-		return false;
-	if (load_blocks(TEMP, path, temp, n) == false)
-		return false;
-	
-	if (skill.load(path, objec, n) == false)
-		return false;
-	
-	return true;
+	return load_palette(path, data, n) &&
+	       load_objects(PERM, path, perm, n) &&
+	       load_blocks(PERM, path, perm, n) &&
+	       load_objects(TEMP, path, temp, n) &&
+	       load_blocks(TEMP, path, temp, n) &&
+	       skill.load(path, objec, n);
 }
 
 bool Style::load_palette( string path, string name, unsigned int n )

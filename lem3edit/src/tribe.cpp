@@ -28,16 +28,9 @@ bool Tribe::load( unsigned int n )
 	const string tribe = "TRIBE";
 	const string tpanl = "TPANL";
 	
-	if (load_palette(path, tribe, n) == false)
-		return false;
-	
-	if (cmp.load(path, tribe, n) == false)
-		return false;
-	
-	if (panel.load(path, tpanl, n) == false)
-		return false;
-	
-	return true;
+	return load_palette(path, tribe, n) &&
+	       cmp.load(path, tribe, n) &&
+	       panel.load(path, tpanl, n);
 }
 
 bool Tribe::load_palette( string path, string name, unsigned int n )

@@ -99,16 +99,9 @@ bool Level::load( unsigned int n )
 	const string level = "LEVEL";
 	const string perm = "PERM", temp = "TEMP";
 	
-	if (load_level(path, level, n) == false)
-		return false;
-	
-	if (load_objects(PERM, path, perm, n) == false)
-		return false;
-	
-	if (load_objects(TEMP, path, temp, n) == false)
-		return false;
-	
-	return true;
+	return load_level(path, level, n) &&
+	       load_objects(PERM, path, perm, n) &&
+	       load_objects(TEMP, path, temp, n);
 }
 
 bool Level::load_level( const std::string &path, const std::string &name, unsigned int n )
