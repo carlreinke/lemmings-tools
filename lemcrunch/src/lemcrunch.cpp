@@ -327,7 +327,7 @@ void Section::dereference_data( size_t length, unsigned int offset_bit_count )
 {
 	size_t offset = get_bits(offset_bit_count) + 1;
 	
-	if (m_di - 1 + offset >= m_dsize && m_di < length)
+	if (m_di - 1 + offset >= m_dsize || m_di < length)
 		throw DECOMPRESSION_ERROR;
 	
 	debug && clog << "ref-" << offset << "-" << length << endl;
