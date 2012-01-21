@@ -38,7 +38,7 @@ public:
 	
 	void destroy();
 	
-	Raw( unsigned int width, unsigned int height ) : width(width), height(height), frame(NULL) { assert(width % 4 == 0); }
+	Raw( unsigned int width, unsigned int height ) : width(width), height(height), frame() { assert(width % 4 == 0); }
 	~Raw( void ) { destroy(); }
 	
 private:
