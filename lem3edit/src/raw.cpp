@@ -19,6 +19,7 @@
 #include "lem3edit.hpp"
 #include "raw.hpp"
 #include "style.hpp"
+
 #include <cassert>
 #include <fstream>
 #include <iostream>

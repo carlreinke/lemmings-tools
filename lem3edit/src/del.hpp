@@ -20,6 +20,7 @@
 #define DEL_HPP
 
 #include "SDL.h"
+
 #include <string>
 #include <vector>
 

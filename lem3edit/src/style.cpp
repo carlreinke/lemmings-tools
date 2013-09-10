@@ -19,6 +19,7 @@
 #include "lem3edit.hpp"
 #include "level.hpp"
 #include "style.hpp"
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -231,8 +232,8 @@ bool Style::load_objects( int type, const string &obj_filename, const string &fr
 			frl_f.read((char *)&seek, sizeof(seek));
 			frl_f.seekg(seek, ios::beg);
 			
-			Uint8 type = 199;
-			Uint16 blocks;
+			Uint8 type = -1;
+			Uint16 blocks = 0;
 			
 			frl_f.read((char *)&type, sizeof(type));
 			frl_f.read((char *)&blocks, sizeof(blocks));

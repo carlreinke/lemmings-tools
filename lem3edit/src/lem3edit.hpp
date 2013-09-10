@@ -20,6 +20,7 @@
 #define LEM3EDIT_HPP
 
 #include "SDL.h"
+
 #include <string>
 
 #define BETWEEN(min_, val, max_) (std::max((int)(min_), std::min((int)(max_), (int)(val))))

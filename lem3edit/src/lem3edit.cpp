@@ -199,6 +199,8 @@ int main( int argc, char *argv[] )
 
 Uint32 loop_timer( Uint32 interval, void *param )
 {
+	(void)param;
+	
 	SDL_Event event;
 	event.type = SDL_USEREVENT;
 	event.user.code = 0;

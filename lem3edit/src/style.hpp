@@ -21,7 +21,9 @@
 
 #include "cmp.hpp"
 #include "lem3edit.hpp"
+
 #include "SDL.h"
+
 #include <string>
 #include <vector>
 

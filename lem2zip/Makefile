@@ -6,12 +6,12 @@ TARGET := lem2zip
 OBJS := lem2zip.o compress.o decompress.o
 
 ifeq ($(DEBUG), 1)
-	DEBUG_FLAGS := -g3 -O0
+	EXTRA_CFLAGS := -g3 -O0
 else
-	DEBUG_FLAGS := -O2 -DNDEBUG
+	EXTRA_CFLAGS := -O2 -DNDEBUG
 endif
 
-CFLAGS := -D_GNU_SOURCE --std=c99 -pedantic -Wall -I$(CURDIR)/src/ $(DEBUG_FLAGS)
+ALL_CFLAGS := -D_GNU_SOURCE --std=c99 -pedantic -Wall -I$(CURDIR)/src/ $(EXTRA_CFLAGS) $(CFLAGS)
 
 ####################################################
 
@@ -29,7 +29,7 @@ endif
 obj/%.d : obj/%.o
 obj/%.o : src/%.c
 	@mkdir -p "$(dir $@)"
-	$(CC) -o $@ -MMD -c $(CFLAGS) $<
+	$(CC) -o $@ -MMD -c $(ALL_CFLAGS) $<
 
 .PHONY : clean
 

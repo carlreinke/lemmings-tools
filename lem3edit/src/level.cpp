@@ -18,6 +18,7 @@
  */
 #include "lem3edit.hpp"
 #include "level.hpp"
+
 #include <cassert>
 #include <fstream>
 #include <iostream>

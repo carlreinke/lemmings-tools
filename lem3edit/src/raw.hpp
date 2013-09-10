@@ -20,6 +20,7 @@
 #define RAW_HPP
 
 #include "SDL.h"
+
 #include <cassert>
 #include <string>
 #include <vector>

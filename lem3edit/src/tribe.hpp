@@ -21,7 +21,9 @@
 
 #include "cmp.hpp"
 #include "del.hpp"
+
 #include "SDL.h"
+
 #include <string>
 
 class Tribe

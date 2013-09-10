@@ -155,6 +155,7 @@ bool Editor::move_selected_z( signed int delta_z )
 	for (Selection::const_iterator i = selection.begin(); i != selection.end(); ++i)
 	{
 		assert(false); // TODO
+		(void)delta_z;
 	}
 	
 	return redraw = true;

@@ -20,7 +20,9 @@
 #define LEVEL_HPP
 
 #include "style.hpp"
+
 #include "SDL.h"
+
 #include <vector>
 #include <string>
 

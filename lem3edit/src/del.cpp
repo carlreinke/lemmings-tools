@@ -18,6 +18,7 @@
  */
 #include "del.hpp"
 #include "lem3edit.hpp"
+
 #include <cassert>
 #include <fstream>
 #include <iostream>
@@ -139,7 +140,7 @@ bool Del::load( const string &din_filename, const string &del_filename )
 		
 		del_f.read((char *)f.frame, f.size);
 		
-		if (!din_f)
+		if (!del_f)
 			return false;
 		
 		frame.push_back(f);
